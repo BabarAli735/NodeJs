@@ -2,13 +2,23 @@ const fs = require("fs");
 const express = require("express");
 const app = express();
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log("Hellow from middleware ");
+  next();
+});
+app.use((req, res, next) => {
+  req.requestTime=new Date().toISOString()
+  next();
+});
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
 const getAllTourse = (req, res) => {
+  console.log(req.requestTime)
   res.status(200).json({
     status: "Success",
+    requestedAt:req.requestTime,
     result: tours.length,
     data: {
       tours,
@@ -22,11 +32,11 @@ const createTour = (req, res) => {
   fs.writeFile(
     `${__dirname}/dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
-    err=>{
+    (err) => {
       res.status(201).JSON({
-        status:'Success',
-        data:newTour
-      })
+        status: "Success",
+        data: newTour,
+      });
     }
   );
   res.status(200).json({
@@ -87,6 +97,23 @@ const deleteTour = (req, res) => {
 };
 
 app.route("/api/v1/tours").get(getAllTourse).post(createTour);
+
+// If we use Midleware here and consumee getAllTours APi
+//then middle ware doesn't called because api Request responces finshed
+// using middleware order Really maters
+
+{
+  /* *****************************************/
+}
+
+// app.use((req,res,next)=>{
+//   console.log('Hellow from middleware ');
+//   next()
+// })
+
+{
+  /* *****************************************/
+}
 app
   .route("/api/v1/tours/:id")
   .get(getTour)
