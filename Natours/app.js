@@ -19,7 +19,12 @@ const tours = JSON.parse(
 app.get("/api/v1/tours/:id", (req, res) => {
     const id=req.params.id*1
 const tour=tours.find(el=>el.id===id)
-console.log(tour);
+if(id>tours.length){
+    res.status(404).json({
+        status: "fail",
+        message:'Data not Found'
+      });
+}
   res.status(200).json({
     status: "Success",
     data: {
