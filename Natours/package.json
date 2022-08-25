@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server":"yarn run nodemon app.js"
+    "server": "yarn run nodemon app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "4",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.19"
   }
 }
