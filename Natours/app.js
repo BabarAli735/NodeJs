@@ -5,6 +5,7 @@ const app = express();
 //1 MIDDELE_WARE
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(express.static(`${__dirname}/public`))
 
 //2 METHOOD
 
@@ -14,6 +15,8 @@ const userRouter=require('./routes/userRouters')
 
 app.use("/api/v1/tours",tourRouter)
 app.use("/api/v1/user",userRouter)
+
+
 const port = 300;
 
 //4 SERVER

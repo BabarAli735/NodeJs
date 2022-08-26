@@ -1,9 +1,14 @@
 const express = require("express");
 const fs = require("fs");
-const { getAllTourse, createTour, getTour, updateTour, deleteTour } = require("../controller/tourController");
+const { getAllTourse, createTour, getTour, updateTour, deleteTour, checkId, checkBody } = require("../controller/tourController");
 const router=express.Router()
 
-router.route("/").get(getAllTourse).post(createTour);
+//create and check Body middleware
+//Check if the body contain name and Price 
+//if not send back 400 (bad Request)
+//add it to post handle stack
+router.param('id',checkId)
+router.route("/").get(getAllTourse).post(checkBody,createTour);
 
 router
   .route("/:id")
