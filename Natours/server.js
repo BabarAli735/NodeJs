@@ -8,5 +8,4 @@ app.listen(port, () => {
     console.log("appp runing");
   });
 
-  const x=23
-  x=50
+ 
