@@ -1,7 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const app = express();
+const app = require('./app');
 dotenv.config({ path: "./config.env" });
 
 const DB = process.env.DATABASE.replace(
@@ -14,9 +14,10 @@ mongoose.connect(DB, {
   useFindAndModify: false,
   useUnifiedTopology: true
 }).then(con=>console.log('DB Connecting Sccessfully '))
-const port = 300;
+
+const port =process.env.PORT|| 3000
 
 //4 SERVER
 app.listen(port, () => {
-  console.log("appp runing");
+  console.log("appp runing",port);
 });

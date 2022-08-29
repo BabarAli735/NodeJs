@@ -1,4 +1,5 @@
 const fs = require("fs");
+const Tours = require("../model/toursModel");
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
@@ -11,43 +12,35 @@ exports.checkId = (req, res, next, val) => {
     });
   }
 };
-exports.checkBody = (req, res, next)=>{ // middleware 1
-  if (!req.body.price){
-      return res.status(400).json({
-          status:'fail',
-          message:'Missing price!!!'
-      })
+
+exports.createTour = async (req, res, next) => {
+  try {
+    const newTour =await  Tours.create(req.body);
+    console.log(newTour);
+    res.status(202).json({
+      status: "Success",
+      data: {
+        tour: newTour,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "Fail",
+      Error: 'Invalid Data Sent!',
+    });
   }
   next();
-}
-exports.createTour = (req, res, next) => {
-  const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign({ id: newId } , req.body);
-  tours.push(req.body);
-  fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
-    JSON.stringify(tours),
-    (err) => {
-      res.status(201).json({
-        status: 'success',
-        data: {
-          tour: newTour,
-        },
-      });
-    }
-  );
 };
-      exports.getAllTourse = (req, res) => {
-        console.log(req.requestTime);
-        res.status(200).json({
-          status: "Success",
-          requestedAt: req.requestTime,
-          result: tours.length,
-          data: {
-            tours,
-          },
-        });
-      };
+exports.getAllTourse = (req, res) => {
+  console.log(req.requestTime);
+  res.status(200).json({
+    status: "Success",
+    result: tours.length,
+    data: {
+      tours,
+    },
+  });
+};
 exports.getTour = (req, res) => {
   const id = req.params.id * 1;
   const tour = tours.find((el) => el.id === id);

@@ -16,3 +16,6 @@ const userRouter = require("./routes/userRouters");
 
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/user", userRouter);
+
+
+module.exports=app
