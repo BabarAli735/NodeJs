@@ -16,7 +16,6 @@ exports.checkId = (req, res, next, val) => {
 exports.createTour = async (req, res, next) => {
   try {
     const newTour =await  Tours.create(req.body);
-    console.log(newTour);
     res.status(202).json({
       status: "Success",
       data: {
@@ -26,7 +25,7 @@ exports.createTour = async (req, res, next) => {
   } catch (err) {
     res.status(400).json({
       status: "Fail",
-      Error: 'Invalid Data Sent!',
+      Error: err,
     });
   }
   next();
