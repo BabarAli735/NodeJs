@@ -7,7 +7,7 @@ const router=express.Router()
 //Check if the body contain name and Price 
 //if not send back 400 (bad Request)
 //add it to post handle stack
-router.param('id',checkId)
+// router.param('id',checkId)
 router.route("/").get(getAllTourse).post(createTour);
 
 router
