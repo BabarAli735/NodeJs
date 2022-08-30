@@ -35,18 +35,27 @@ exports.getAllTourse = async (req, res) => {
   try {
     // console.log(req.query);
     //BUID QUERY
-    //1 ) FILTERING
+    //1A ) FILTERING
     const queryObject = { ...req.query };
     const excludedField = ["page", "sort", "limit", "feilds"];
     excludedField.forEach((el) => delete queryObject[el]);
 
-    // 2 ) ADVANCE FILTERING
+    // 1B ) ADVANCE FILTERING
     let queryStr = JSON.stringify(queryObject);
     const regex = /\b(gt|gte|lt|lte|in)\b/g;
     queryStr = queryStr.replace(regex, "$$" + "$1");
+    let query = Tours.find(JSON.parse(queryStr));
 
-    const query = Tours.find(JSON.parse(queryStr));
-
+    // 2)SORTING
+    if (req.query.sort) {
+      const sortBy=req.query.sort.split(',').join(' ')
+      console.log(sortBy);
+      query = query.sort(sortBy);
+      //Sort(price , ratingsAverage)
+    }else{
+      //Expample if createdAt date available in Data createdAt 
+      query = query.sort('-createdAt'); 
+    }
     //EXECUTE QUERY
     const tours = await query;
     res.status(200).json({
