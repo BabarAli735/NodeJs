@@ -1,3 +1,4 @@
+const { match } = require("assert");
 const fs = require("fs");
 const Tours = require("../model/toursModel");
 const tours = JSON.parse(
@@ -32,21 +33,27 @@ exports.createTour = async (req, res, next) => {
 };
 exports.getAllTourse = async (req, res) => {
   try {
-    // const getFilterTour=await Tours.find({
-    //   duration:5,
-    //   difficulty:'easy'
-    // }) Direct add req.query work like below
+    // console.log(req.query);
+    //BUID QUERY
+    //1 ) FILTERING
+    const queryObject = { ...req.query };
+    const excludedField = ["page", "sort", "limit", "feilds"];
+    excludedField.forEach((el) => delete queryObject[el]);
 
-    // const queryObject={...req.query}
-    // const excludedField=['page','sort','limit','feilds']
-    // excludedField.forEach(el=>delete queryObject[el])
-    // console.log(req.query,queryObject);
-    const getAllTours = await Tours.find(req.query);
+    // 2 ) ADVANCE FILTERING
+    let queryStr = JSON.stringify(queryObject);
+    const regex = /\b(gt|gte|lt|lte|in)\b/g;
+    queryStr = queryStr.replace(regex, "$$" + "$1");
+
+    const query = Tours.find(JSON.parse(queryStr));
+
+    //EXECUTE QUERY
+    const tours = await query;
     res.status(200).json({
       status: "Success",
-      result: getAllTours.length,
+      result: tours.length,
       data: {
-        tours: getAllTours,
+        tours: tours,
       },
     });
   } catch (err) {
