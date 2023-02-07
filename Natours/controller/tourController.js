@@ -1,4 +1,4 @@
-const { match } = require("assert");
+
 const fs = require("fs");
 const Tours = require("../model/toursModel");
 const tours = JSON.parse(
@@ -48,14 +48,23 @@ exports.getAllTourse = async (req, res) => {
 
     // 2)SORTING
     if (req.query.sort) {
-      const sortBy=req.query.sort.split(',').join(' ')
+      const sortBy = req.query.sort.split(",").join(" ");
       console.log(sortBy);
       query = query.sort(sortBy);
       //Sort(price , ratingsAverage)
-    }else{
-      //Expample if createdAt date available in Data createdAt 
-      query = query.sort('-createdAt'); 
+    } else {
+      //Expample if createdAt date available in Data createdAt
+      // query = query.sort('-createdAt');
     }
+    // 3)Feild limiting
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      console.log("====", fields);
+      query = query.select(fields);
+    } else {
+      query = query.select("-__v");
+    }
+
     //EXECUTE QUERY
     const tours = await query;
     res.status(200).json({
