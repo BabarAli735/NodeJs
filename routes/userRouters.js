@@ -1,9 +1,11 @@
 const express = require("express");
 const { getAllUsers, createUser, getUser, updateUser, deleteUser } = require("../controller/userController");
+const { signUp } = require("../controller/authContoller");
 const router=express.Router()
 
+
   //3 ROUTS
-  
+  router.post('/signUp',signUp)
   router.route("/").get(getAllUsers).post(createUser);
   router.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
 
